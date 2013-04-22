@@ -1,9 +1,10 @@
 require 'linked_list_item'
 
 class LinkedList
-  attr_reader :first_item
+  attr_accessor :first_item
 
   def initialize *args
+    args.each {|payload| add_item(payload)}
   end
 
   def add_item(payload)
@@ -20,74 +21,94 @@ class LinkedList
   end
 
   def get(n)
-    if n == 0
-      @first_item.payload
-    else
-      count = 0
-      current_item = @first_item
-      while count < n
-        raise IndexError if current_item == nil
-        current_item = current_item.next_list_item
-        count+=1    
-      end
-      return current_item.payload
+    count = 0
+    current_item = @first_item
+    n.times do
+      raise IndexError if current_item.nil?
+      current_item = current_item.next_list_item
     end
+    current_item.payload
   end
 
 
   def last
-    if @first_item.nil?
-      nil
-    else
-      current_item = @first_item
-      while !current_item.last?
-        current_item = current_item.next_list_item
-      end
-      return current_item.payload
-    end
+    current_item = @first_item
+    return nil if @first_item.nil?
+    until current_item.last?
+      current_item = current_item.next_list_item
+    end 
+    current_item.payload
   end
 
   def size
+    current_item = @first_item
     size = 0
-    if @first_item.nil?
-      size
-    else
-      current_item = @first_item
-      while !current_item.nil?
-        current_item = current_item.next_list_item
-        size += 1
-      end
-      return size
+    until current_item.nil?
+      current_item = current_item.next_list_item
+      size += 1
     end
+    size
   end
 
   def to_s
-    if @first_item.nil?
-     "| |"
-    elsif !@first_item.nil? && @first_item.next_list_item.nil?
-      "| #{@first_item.payload} |"
-    else
-      current_item = @first_item
-      item_string = "| "
-      while !current_item.nil?
-        item_string += current_item.payload
-        item_string += ", " unless current_item.last?
-        current_item = current_item.next_list_item
-      end
-    item_string += " |"
-    return item_string
+    # return "| |" if @first_item.nil?
+    # current_item = @first_item
+    # item_string = "| "
+    # until current_item.nil?
+    #   item_string += current_item.payload
+    #   item_string += ", " unless current_item.last?
+    #   current_item = current_item.next_list_item
+    # end
+    # item_string += " |"
+    current_item = @first_item
+    payloads = ""
+    while current_item
+      payloads += " "
+      payloads += current_item.payload
+      payloads += "," unless current_item.last?
+      current_item = current_item.next_list_item
     end
+    "|#{payloads} |"
   end
 
   # ========= Bonus ========== #
 
-  def [](payload)
+  def [](index)
+    # count = 0
+    # current_item = @first_item
+    # while count < index
+    #   raise IndexError if current_item == nil
+    #   current_item = current_item.next_list_item
+    #   count+=1    
+    # end
+    # return current_item.payload
+    get(index)
   end
 
   def []=(n, payload)
+    current_item = @first_item
+    n.times do
+      current_item = current_item.next_list_item
+    end
+    current_item.payload = payload
   end
 
   def remove(n)
+    if n == 0
+      raise IndexError if @first_item.nil?
+      @first_item = @first_item.next_list_item
+    else
+      count = 0
+      left_item = @first_item
+      while count < (n-1)
+        raise IndexError if left_item.nil?
+        left_item = left_item.next_list_item
+        count += 1
+      end
+      raise IndexError if left_item.nil? or left_item.next_list_item.nil?
+      right_item = left_item.next_list_item.next_list_item
+      left_item.next_list_item = right_item
+    end
   end
 
 end
