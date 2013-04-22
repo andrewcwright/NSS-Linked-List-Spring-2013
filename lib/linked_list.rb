@@ -13,7 +13,7 @@ class LinkedList
       @first_item = new_item
     else
       current_item = @first_item
-      while !current_item.last?
+      until current_item.last?
         current_item = current_item.next_list_item
       end
       current_item.next_list_item = new_item
@@ -21,7 +21,6 @@ class LinkedList
   end
 
   def get(n)
-    count = 0
     current_item = @first_item
     n.times do
       raise IndexError if current_item.nil?
@@ -74,14 +73,6 @@ class LinkedList
   # ========= Bonus ========== #
 
   def [](index)
-    # count = 0
-    # current_item = @first_item
-    # while count < index
-    #   raise IndexError if current_item == nil
-    #   current_item = current_item.next_list_item
-    #   count+=1    
-    # end
-    # return current_item.payload
     get(index)
   end
 
