@@ -102,4 +102,18 @@ class LinkedList
     end
   end
 
+  # ========= Index exercise ========== #
+
+  def indexOf payload
+    current_item = @first_item
+    index = 0
+    while current_item
+      if current_item.payload == payload
+        return index
+      end
+      current_item = current_item.next_list_item
+      index += 1
+    end
+  end
+
 end
