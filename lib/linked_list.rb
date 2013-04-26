@@ -20,6 +20,15 @@ class LinkedList
     end
   end
 
+  def get_item(n)
+    item = @first_item
+    n.times do
+      raise IndexError if item.nil?
+      item = item.next_list_item
+    end
+    item
+  end
+
   def get(n)
     current_item = @first_item
     n.times do
@@ -63,7 +72,7 @@ class LinkedList
     payloads = ""
     while current_item
       payloads += " "
-      payloads += current_item.payload
+      payloads += current_item.payload.to_s
       payloads += "," unless current_item.last?
       current_item = current_item.next_list_item
     end
@@ -114,6 +123,53 @@ class LinkedList
       current_item = current_item.next_list_item
       index += 1
     end
+  end
+
+  # ========= Sorting Exercise ========== #
+
+  def sorted?
+    if size == 0 or size == 1
+      return true
+    else
+      current_item = @first_item
+      (size - 1).times do
+        next_item = current_item.next_list_item
+        return false if current_item > next_item
+        current_item = current_item.next_list_item
+      end
+      return true
+    end
+  end
+
+  def sort
+    if size == 0 or size == 1
+      return self
+    else
+      until sorted?
+        current_item = @first_item
+        index = 0
+        (size - 1).times do
+          next_item = current_item.next_list_item
+          unless current_item.nil? or next_item.nil?
+            swap_with_next(index) if current_item > next_item
+          end
+          current_item = current_item.next_list_item
+          index += 1
+        end
+      end
+      self
+    end
+  end
+
+  # This is a helper I implemented
+  def swap_with_next i
+    left_item = get_item(i-1)
+    middle_item = get_item(i)
+    right_item = get_item(i+1)
+    left_item.next_list_item = right_item
+    middle_item.next_list_item = right_item.next_list_item
+    right_item.next_list_item = middle_item
+    @first_item = right_item if i == 0
   end
 
 end
